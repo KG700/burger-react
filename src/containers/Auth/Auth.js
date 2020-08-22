@@ -16,7 +16,7 @@ class Auth extends Component {
                 value: '',
                 validation: {
                   required: true,
-                  isEmail: true
+                //   isEmail: true
                 },
                 valid: false,
                 touched: false
@@ -36,6 +36,48 @@ class Auth extends Component {
                 touched: false
             }
         }      
+    }
+
+    checkValidity(value, rules) {
+        console.log(rules)
+        let isValid = true;
+    
+        if (!rules) {
+          return true;
+        }
+    
+        if (rules.required) {
+            console.log('required')
+          isValid = value.trim() !== '' && isValid;
+          console.log(isValid)
+        }
+    
+        if (rules.minLength) {
+            console.log('minlength')
+          isValid = value.length >= rules.minLength && isValid;
+          console.log(isValid)
+        }
+    
+        if (rules.maxLength) {
+          isValid = value.length <= rules.maxLength && isValid;
+        } 
+    
+        console.log('final isValid:')
+        console.log(isValid)
+        return isValid;
+      }
+
+    inputChangedHandler = (event, controlName) => {
+        const updatedControls = {
+            ...this.state.controls,
+            [controlName]: {
+                ...this.state.controls[controlName],
+                value: event.target.value,
+                valid: this.checkValidity(event.target.value, this.state.controls[controlName].validation),
+                touched: true
+            }
+        };
+        this.setState({controls: updatedControls})
     }
 
     render () {
